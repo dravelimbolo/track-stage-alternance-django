@@ -1,0 +1,120 @@
+{% extends "auth_base.html" %}
+{% load socialaccount %}
+
+{% block title %}TrackStage - Inscription{% endblock %}
+{% block body_class %}flex flex-col md:flex-row{% endblock %}
+
+{% block body %}
+<!-- Left Panel -->
+<div class="w-full md:w-[45%] bg-[#E8B800] p-8 md:p-16 flex flex-col justify-between min-h-[35vh] md:min-h-screen">
+    <div>
+        <div class="text-4xl font-semibold tracking-tighter text-white mb-12">TrackStage</div>
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-white leading-tight mb-12">
+            Gérez vos candidatures de stage &amp; alternance
+        </h1>
+        <div class="flex flex-col gap-6 text-white/90">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <iconify-icon icon="solar:documents-minimalistic-linear" class="text-xl text-white"></iconify-icon>
+                </div>
+                <span class="text-base font-medium">Centralisez toutes vos pistes au même endroit</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <iconify-icon icon="solar:routing-linear" class="text-xl text-white"></iconify-icon>
+                </div>
+                <span class="text-base font-medium">Suivez l'avancement de chaque étape</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                    <iconify-icon icon="solar:calendar-mark-linear" class="text-xl text-white"></iconify-icon>
+                </div>
+                <span class="text-base font-medium">Préparez vos entretiens sereinement</span>
+            </div>
+        </div>
+    </div>
+    <div class="hidden md:block text-sm text-white/70 font-medium mt-12">© 2025 TrackStage. Tous droits réservés.</div>
+</div>
+
+<!-- Right Panel -->
+<div class="w-full md:w-[55%] p-6 md:p-12 lg:p-20 flex flex-col justify-center items-center overflow-y-auto bg-white">
+    <div class="w-full max-w-sm flex flex-col gap-7">
+
+        <div class="text-center md:text-left">
+            <h2 class="text-2xl font-semibold tracking-tight text-[#1A1A1A]">Créer un compte</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">Choisissez comment vous inscrire</p>
+        </div>
+
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="px-4 py-3 rounded-lg border text-sm font-medium
+            {% if msg.tags == 'error' %}bg-red-50 border-red-200 text-red-700{% else %}bg-green-50 border-green-200 text-green-700{% endif %}">
+            {{ msg }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Social -->
+        <div class="flex flex-col gap-3">
+            <a href="{% provider_login_url 'google' %}"
+               class="relative w-full flex items-center justify-center py-3 px-4 rounded-lg border-2 border-[#E0E0E0] bg-white text-[#1A1A1A] hover:bg-gray-50 transition-colors">
+                <iconify-icon icon="logos:google-icon" class="absolute left-4 text-xl"></iconify-icon>
+                <span class="text-sm font-semibold">Continuer avec Google</span>
+            </a>
+            <a href="{% provider_login_url 'github' %}"
+               class="relative w-full flex items-center justify-center py-3 px-4 rounded-lg border-2 border-[#1A1A1A] bg-white text-[#1A1A1A] hover:bg-gray-100 transition-colors">
+                <iconify-icon icon="mdi:github" class="absolute left-4 text-xl text-[#1A1A1A]"></iconify-icon>
+                <span class="text-sm font-semibold">Continuer avec GitHub</span>
+            </a>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center w-full">
+            <div class="flex-1 border-t-2 border-[#E8B800]/20"></div>
+            <span class="px-4 text-sm font-medium text-gray-400">ou</span>
+            <div class="flex-1 border-t-2 border-[#E8B800]/20"></div>
+        </div>
+
+        <!-- Email form -->
+        <details class="w-full">
+            <summary class="cursor-pointer text-sm font-semibold text-gray-500 hover:text-[#1A1A1A] transition-colors text-center block">
+                S'inscrire avec une adresse e-mail →
+            </summary>
+            <form method="post" action="{% url 'accounts:register' %}" class="mt-6 flex flex-col gap-3">
+                {% csrf_token %}
+                <div class="grid grid-cols-2 gap-3">
+                    {{ form.first_name }}
+                    {{ form.last_name }}
+                </div>
+                {{ form.email }}
+                {% if form.email.errors %}<p class="text-xs text-red-600">{{ form.email.errors.0 }}</p>{% endif %}
+                {{ form.password1 }}
+                {{ form.password2 }}
+                {% if form.password2.errors %}<p class="text-xs text-red-600">{{ form.password2.errors.0 }}</p>{% endif %}
+                {% if form.non_field_errors %}<p class="text-xs text-red-600">{{ form.non_field_errors.0 }}</p>{% endif %}
+
+                <label class="flex items-start gap-3 cursor-pointer mt-2">
+                    <input type="checkbox" name="terms" required class="mt-1 accent-[#E8B800]">
+                    <span class="text-xs font-medium text-gray-600 leading-tight">
+                        J'accepte les <a href="#" class="text-[#E8B800] underline">conditions d'utilisation</a> et la <a href="#" class="text-[#E8B800] underline">politique de confidentialité</a>
+                    </span>
+                </label>
+
+                <button type="submit" class="w-full py-3 rounded-lg bg-[#E8B800] text-[#1A1A1A] font-semibold text-sm hover:bg-[#d1a600] transition-colors">
+                    Créer mon compte
+                </button>
+            </form>
+        </details>
+
+        <div class="text-center">
+            <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-gray-500 hover:text-[#1A1A1A] transition-colors">
+                Déjà un compte ? <span class="text-[#E8B800]">Se connecter</span>
+            </a>
+            <p class="text-xs font-medium text-gray-400 mt-6 leading-relaxed">
+                En continuant, vous acceptez nos CGU. Aucun numéro de téléphone requis.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+# Core
+Django==5.2.12
+
+# Auth & Social
+django-allauth==0.63.6
+
+# Static files (prod) 
+whitenoise==6.7.0
+
+# Database (prod) 
+psycopg2-binary==2.9.9
+
+# Image upload
+Pillow==10.3.0
+
+# Dev utilities
+python-dotenv==1.0.1
