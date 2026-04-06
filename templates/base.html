@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TrackStage{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #FFFFFF; border-left: 1px solid #E8E8E8; }
+        ::-webkit-scrollbar-thumb { background: #E8E8E8; }
+        ::-webkit-scrollbar-thumb:hover { background: #D1D1D1; }
+        select { appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%231A1A1A' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+        }
+        {% block extra_css_inline %}{% endblock %}
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-[#FFFFFF] text-[#1A1A1A] font-sans antialiased min-h-screen flex flex-col md:flex-row">
+
+    {#  Sidebar ─ #}
+    <aside class="w-full md:w-[240px] bg-[#1A1A1A] text-[#FFFFFF] flex-shrink-0 flex flex-col md:min-h-screen border-b md:border-b-0 md:border-r border-[#1A1A1A]">
+
+        <div class="p-6 flex items-center justify-between md:block">
+            <a href="{% url 'dashboard:index' %}" class="text-2xl font-semibold tracking-tighter text-[#E8B800]">TrackStage</a>
+            <button id="mobile-menu-btn" class="md:hidden text-white flex items-center">
+                <iconify-icon icon="solar:hamburger-menu-linear" class="text-2xl"></iconify-icon>
+            </button>
+        </div>
+
+        <nav id="sidebar-nav" class="hidden md:flex flex-1 px-4 flex-col gap-1 mt-2">
+            {% url 'dashboard:index' as url_dashboard %}
+            {% url 'candidatures:list' as url_cand %}
+            {% url 'entretiens:list' as url_entretiens %}
+            {% url 'accounts:profile' as url_profile %}
+
+            <a href="{{ url_dashboard }}"
+               class="flex items-center gap-3 px-4 py-2.5 rounded font-medium text-sm transition-colors
+                      {% if request.path == url_dashboard %}bg-[#E8B800] text-[#1A1A1A]{% else %}text-[#FFFFFF]/80 hover:bg-[#FFFFFF]/10 hover:text-[#FFFFFF]{% endif %}">
+                <iconify-icon icon="solar:widget-5-linear" class="text-lg"></iconify-icon>
+                Tableau de bord
+            </a>
+
+            <a href="{{ url_cand }}"
+               class="flex items-center gap-3 px-4 py-2.5 rounded font-medium text-sm transition-colors
+                      {% if '/candidatures' in request.path %}bg-[#E8B800] text-[#1A1A1A]{% else %}text-[#FFFFFF]/80 hover:bg-[#FFFFFF]/10 hover:text-[#FFFFFF]{% endif %}">
+                <iconify-icon icon="solar:documents-minimalistic-linear" class="text-lg"></iconify-icon>
+                Mes candidatures
+            </a>
+
+            <a href="{{ url_entretiens }}"
+               class="flex items-center gap-3 px-4 py-2.5 rounded font-medium text-sm transition-colors
+                      {% if '/entretiens' in request.path %}bg-[#E8B800] text-[#1A1A1A]{% else %}text-[#FFFFFF]/80 hover:bg-[#FFFFFF]/10 hover:text-[#FFFFFF]{% endif %}">
+                <iconify-icon icon="solar:calendar-mark-linear" class="text-lg"></iconify-icon>
+                Entretiens
+            </a>
+
+            <a href="{{ url_profile }}"
+               class="flex items-center gap-3 px-4 py-2.5 rounded font-medium text-sm transition-colors mt-auto mb-2
+                      {% if '/profil' in request.path %}bg-[#E8B800] text-[#1A1A1A]{% else %}text-[#FFFFFF]/80 hover:bg-[#FFFFFF]/10 hover:text-[#FFFFFF]{% endif %}">
+                <iconify-icon icon="solar:settings-linear" class="text-lg"></iconify-icon>
+                Paramètres
+            </a>
+        </nav>
+
+        {# User pill #}
+        <div class="hidden md:flex p-4 border-t border-[#FFFFFF]/10">
+            <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 px-2 w-full hover:opacity-80 transition-opacity">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="{{ user.initiales }}"
+                         class="w-9 h-9 rounded object-cover shrink-0">
+                {% else %}
+                    <div class="w-9 h-9 rounded bg-[#E8B800] text-[#1A1A1A] flex items-center justify-center font-semibold text-sm shrink-0">
+                        {{ user.initiales }}
+                    </div>
+                {% endif %}
+                <div class="flex flex-col overflow-hidden">
+                    <span class="text-sm font-medium truncate">{{ user.nom_affiche }}</span>
+                    <span class="text-xs text-[#FFFFFF]/60 truncate">{{ user.email }}</span>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    {#  Main  #}
+    <main class="flex-1 flex flex-col md:h-screen overflow-y-auto bg-[#FFFFFF]">
+
+        {# Flash messages #}
+        {% if messages %}
+        <div class="px-6 md:px-10 pt-4">
+            {% for msg in messages %}
+            <div class="mb-2 flex items-center gap-3 px-4 py-3 rounded border text-sm font-medium
+                {% if msg.tags == 'success' %}bg-green-50 border-green-200 text-green-800
+                {% elif msg.tags == 'error' %}bg-red-50 border-red-200 text-red-800
+                {% elif msg.tags == 'warning' %}bg-yellow-50 border-yellow-200 text-yellow-800
+                {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
+                <iconify-icon icon="{% if msg.tags == 'success' %}solar:check-circle-linear{% elif msg.tags == 'error' %}solar:close-circle-linear{% else %}solar:info-circle-linear{% endif %}" class="text-lg shrink-0"></iconify-icon>
+                {{ msg }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('sidebar-nav');
+        if (btn && nav) {
+            btn.addEventListener('click', () => nav.classList.toggle('hidden'));
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "auth_base.html" %}
+{% load socialaccount %}
+
+{% block title %}TrackStage - Connexion{% endblock %}
+
+{% block body %}
+<div class="w-full max-w-[420px] bg-white border-2 border-[#E8B800] rounded-xl overflow-hidden flex flex-col">
+
+    <!-- Top Band -->
+    <div class="h-[60px] bg-[#E8B800] w-full flex items-center justify-center">
+        <span class="text-white text-xl font-semibold tracking-tighter">TrackStage</span>
+    </div>
+
+    <div class="p-6 md:p-8 flex flex-col gap-6">
+
+        <!-- Header -->
+        <div class="text-center flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold tracking-tight text-[#1A1A1A]">Connexion</h1>
+            <p class="text-sm font-medium text-gray-500">Choisissez comment vous connecter</p>
+        </div>
+
+        <!-- Django messages -->
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="px-4 py-3 rounded-lg border text-sm font-medium
+            {% if msg.tags == 'error' %}bg-red-50 border-red-200 text-red-700{% else %}bg-green-50 border-green-200 text-green-700{% endif %}">
+            {{ msg }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Social Buttons -->
+        <div class="flex flex-col gap-3">
+            <!-- Google -->
+            <a href="{% provider_login_url 'google' %}"
+               class="relative w-full h-12 flex items-center justify-center rounded-lg border-2 border-[#E0E0E0] bg-white text-[#1A1A1A] hover:bg-[#F5F5F5] transition-colors">
+                <iconify-icon icon="logos:google-icon" class="absolute left-4 text-xl"></iconify-icon>
+                <span class="text-sm font-semibold">Continuer avec Google</span>
+            </a>
+
+            <!-- GitHub -->
+            <a href="{% provider_login_url 'github' %}"
+               class="relative w-full h-12 flex items-center justify-center rounded-lg border-2 border-[#1A1A1A] bg-white text-[#1A1A1A] hover:bg-gray-100 transition-colors">
+                <iconify-icon icon="mdi:github" class="absolute left-4 text-xl text-[#1A1A1A]"></iconify-icon>
+                <span class="text-sm font-semibold">Continuer avec GitHub</span>
+            </a>
+        </div>
+
+        <!-- Divider -->
+        <div class="flex items-center w-full">
+            <div class="flex-1 border-t-2 border-gray-100"></div>
+            <span class="px-4 text-sm font-medium text-gray-400">ou</span>
+            <div class="flex-1 border-t-2 border-gray-100"></div>
+        </div>
+
+        <!-- Email Form Toggle -->
+        <details class="w-full group">
+            <summary class="cursor-pointer text-sm font-semibold text-gray-500 hover:text-[#1A1A1A] transition-colors text-center w-full block">
+                Se connecter avec e-mail →
+            </summary>
+
+            <form method="post" action="{% url 'accounts:login' %}" class="mt-6 flex flex-col gap-4">
+                {% csrf_token %}
+                <div class="flex flex-col gap-3">
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="text-xs text-red-600">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <p class="text-xs text-red-600">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                    {% if form.non_field_errors %}
+                    <p class="text-xs text-red-600">{{ form.non_field_errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <div class="relative flex items-center justify-center shrink-0">
+                            {{ form.remember_me }}
+                            <div class="w-4 h-4 rounded border-2 border-[#E0E0E0] bg-white peer-checked:bg-[#E8B800] peer-checked:border-[#E8B800] transition-colors"></div>
+                        </div>
+                        <span class="text-xs font-medium text-gray-600">Se souvenir de moi</span>
+                    </label>
+                    <a href="{% url 'account_reset_password' %}" class="text-xs font-semibold text-[#E8B800] hover:text-[#1A1A1A] transition-colors">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
+                <button type="submit" class="w-full h-12 rounded-lg bg-[#E8B800] text-[#1A1A1A] font-semibold text-sm hover:bg-[#FFF8D6] hover:border-2 hover:border-[#E8B800] transition-all">
+                    Se connecter
+                </button>
+            </form>
+        </details>
+
+        <!-- Bottom -->
+        <div class="flex flex-col gap-3 text-center">
+            <a href="{% url 'accounts:register' %}" class="text-sm font-semibold text-gray-500 hover:text-[#1A1A1A] transition-colors">
+                Pas encore de compte ? <span class="text-[#E8B800]">S'inscrire</span>
+            </a>
+            <p class="text-xs font-medium text-gray-400">Connexion sécurisée - aucun numéro de téléphone requis</p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

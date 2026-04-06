@@ -1,0 +1,14 @@
+-r requirements.txt
+
+# Test
+pytest==8.2.2
+pytest-django==4.8.0
+coverage==7.5.3
+factory-boy==3.3.0
+
+# Lint & format
+ruff==0.4.9
+black==24.4.2
+
+# Dev
+django-debug-toolbar==4.4.2
