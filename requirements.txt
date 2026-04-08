@@ -1,5 +1,5 @@
 # Core
-Django==5.2.12
+Django==5.2.13
 
 # Auth & Social
 django-allauth==65.15.1
@@ -17,4 +17,4 @@ Pillow==12.2.0
 python-dotenv==1.0.1
 requests==2.33.1
 PyJWT==2.12.1
-cryptography==46.0.6
+cryptography==46.0.7
