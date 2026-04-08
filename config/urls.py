@@ -4,13 +4,11 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-
+    path("admin/", admin.site.urls),
     # Auth email/password + social(allauth)
-    path('auth/', include('allauth.urls')),
-
+    path("auth/", include("allauth.urls")),
     # Apps locales
-    path('', include('apps.accounts.uls', namespace="accounts")),
+    path("", include("apps.accounts.uls", namespace="accounts")),
 ]
 
 if settings.DEBUG:

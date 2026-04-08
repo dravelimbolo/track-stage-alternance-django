@@ -6,18 +6,22 @@ from .models import User
 
 class LoginEmailForm(forms.Form):
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={
-            "placeholder": "Adresse e-mail",
-            "class": "w-full h-12 px-4 rounded-lg border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] placeholder-gray-400 transition-colors",
-            "autocomplete": "email",
-        })
+        widget=forms.EmailInput(
+            attrs={
+                "placeholder": "Adresse e-mail",
+                "class": "w-full h-12 px-4 rounded-lg border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] placeholder-gray-400 transition-colors",
+                "autocomplete": "email",
+            }
+        )
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "placeholder": "Mot de passe",
-            "class": "w-full h-12 px-4 rounded-lg border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] placeholder-gray-400 transition-colors",
-            "autocomplete": "current-password",
-        })
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Mot de passe",
+                "class": "w-full h-12 px-4 rounded-lg border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] placeholder-gray-400 transition-colors",
+                "autocomplete": "current-password",
+            }
+        )
     )
     remember_me = forms.BooleanField(required=False)
 
@@ -48,7 +52,9 @@ class RegisterForm(forms.ModelForm):
     )
     password2 = forms.CharField(
         label="Confirmer le mot de passe",
-        widget=forms.PasswordInput(attrs={"placeholder": "Confirmer le mot de passe", "class": INPUT_CLASS}),
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Confirmer le mot de passe", "class": INPUT_CLASS}
+        ),
     )
 
     class Meta:
@@ -57,7 +63,9 @@ class RegisterForm(forms.ModelForm):
         widgets = {
             "first_name": forms.TextInput(attrs={"placeholder": "Prénom", "class": INPUT_CLASS}),
             "last_name": forms.TextInput(attrs={"placeholder": "Nom", "class": INPUT_CLASS}),
-            "email": forms.EmailInput(attrs={"placeholder": "Adresse e-mail", "class": INPUT_CLASS}),
+            "email": forms.EmailInput(
+                attrs={"placeholder": "Adresse e-mail", "class": INPUT_CLASS}
+            ),
         }
 
     def clean_email(self):
@@ -94,27 +102,45 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            "first_name", "last_name", "email",
-            "telephone", "bio",
-            "universite", "formation", "niveau",
-            "linkedin_url", "github_url",
+            "first_name",
+            "last_name",
+            "email",
+            "telephone",
+            "bio",
+            "universite",
+            "formation",
+            "niveau",
+            "linkedin_url",
+            "github_url",
             "avatar",
         ]
         widgets = {
             "first_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Prénom"}),
             "last_name": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "Nom"}),
             "email": forms.EmailInput(attrs={"class": FIELD_CLASS}),
-            "telephone": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "ex : +33 6 12 34 56 78"}),
-            "bio": forms.Textarea(attrs={
-                "class": FIELD_CLASS + " h-24 resize-none py-3",
-                "placeholder": "Quelques mots sur vous…",
-                "rows": 3,
-            }),
-            "universite": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "ex : Université Paris-Saclay"}),
-            "formation": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "ex : Master Informatique"}),
+            "telephone": forms.TextInput(
+                attrs={"class": FIELD_CLASS, "placeholder": "ex : +33 6 12 34 56 78"}
+            ),
+            "bio": forms.Textarea(
+                attrs={
+                    "class": FIELD_CLASS + " h-24 resize-none py-3",
+                    "placeholder": "Quelques mots sur vous…",
+                    "rows": 3,
+                }
+            ),
+            "universite": forms.TextInput(
+                attrs={"class": FIELD_CLASS, "placeholder": "ex : Université Paris-Saclay"}
+            ),
+            "formation": forms.TextInput(
+                attrs={"class": FIELD_CLASS, "placeholder": "ex : Master Informatique"}
+            ),
             "niveau": forms.TextInput(attrs={"class": FIELD_CLASS, "placeholder": "ex : M2, L3…"}),
-            "linkedin_url": forms.URLInput(attrs={"class": FIELD_CLASS, "placeholder": "https://linkedin.com/in/…"}),
-            "github_url": forms.URLInput(attrs={"class": FIELD_CLASS, "placeholder": "https://github.com/…"}),
+            "linkedin_url": forms.URLInput(
+                attrs={"class": FIELD_CLASS, "placeholder": "https://linkedin.com/in/…"}
+            ),
+            "github_url": forms.URLInput(
+                attrs={"class": FIELD_CLASS, "placeholder": "https://github.com/…"}
+            ),
         }
 
 
