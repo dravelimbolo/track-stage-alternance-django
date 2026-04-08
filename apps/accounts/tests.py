@@ -27,7 +27,7 @@ class TestUserModel:
             email="ab@example.com",
             password="pass",
         )
-        assert user.initiales == "JD"
+        assert u.initiales == "JD"
 
     def test_nom_affiche(self, user):
         assert user.nom_affiche == "Jean Dupont"
