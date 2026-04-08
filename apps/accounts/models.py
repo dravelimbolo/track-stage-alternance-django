@@ -28,7 +28,7 @@ class User(AbstractUser):
 
     @property
     def initiales(self):
-        
+
         if self.first_name and self.last_name:
             return f"{self.first_name[0]}{self.last_name[0]}".upper()
         return self.email[:2].upper()

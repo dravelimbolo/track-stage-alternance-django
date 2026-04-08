@@ -1,13 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.shortcuts import redirect
-from django.views import View
-from django.views.generic import FormView, UpdateView, TemplateView
 from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import FormView, TemplateView
 
-from .forms import LoginEmailForm, RegisterForm, ProfileForm, NotificationsForm
-from .models import User
+from .forms import LoginEmailForm, NotificationsForm, ProfileForm, RegisterForm
 
 
 class LoginView(FormView):
@@ -32,8 +31,8 @@ class LoginView(FormView):
     def form_invalid(self, form):
         messages.error(self.request, "Identifiants incorrects, veuillez réessayer.")
         return super().form_invalid(form)
-  
-    
+
+
 class RegisterView(FormView):
     template_name = "accounts/register.html"
     form_class = RegisterForm

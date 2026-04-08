@@ -11,6 +11,9 @@ exclude = [
 select = ["E", "F", "W", "I", "N", "B", "UP"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+"config/settings/*.py" = ["F403", "F405", "E402"]
+
 [tool.black]
 line-length = 100
 target-version = ["py312"]

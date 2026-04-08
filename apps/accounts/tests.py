@@ -1,9 +1,9 @@
 import pytest
-from django.urls import reverse
 from django.test import Client
+from django.urls import reverse
 
+from apps.accounts.forms import RegisterForm
 from apps.accounts.models import User
-from apps.accounts.forms import RegisterForm, LoginEmailForm
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ class TestUserModel:
             email="ab@example.com",
             password="pass",
         )
-        assert user.initiales == "JD"
+        assert u.initiales == "JD"
 
     def test_nom_affiche(self, user):
         assert user.nom_affiche == "Jean Dupont"
