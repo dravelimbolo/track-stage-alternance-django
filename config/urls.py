@@ -8,7 +8,7 @@ urlpatterns = [
     # Auth email/password + social(allauth)
     path("auth/", include("allauth.urls")),
     # Apps locales
-    path("", include("apps.accounts.uls", namespace="accounts")),
+    path("", include("apps.accounts.urls", namespace="accounts")),
 ]
 
 if settings.DEBUG:
