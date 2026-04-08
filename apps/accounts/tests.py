@@ -1,9 +1,9 @@
 import pytest
-from django.urls import reverse
 from django.test import Client
+from django.urls import reverse
 
+from apps.accounts.forms import RegisterForm
 from apps.accounts.models import User
-from apps.accounts.forms import RegisterForm, LoginEmailForm
 
 
 @pytest.fixture
