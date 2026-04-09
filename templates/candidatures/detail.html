@@ -5,7 +5,6 @@
 {% block content %}
 <header class="p-6 md:px-10 md:py-8 border-b border-[#E8E8E8]">
     <div class="flex items-center gap-2 text-xs font-medium text-[#1A1A1A]/50 mb-1">
-        <a href="{% url 'dashboard:index' %}" class="hover:text-[#E8B800] transition-colors">Tableau de bord</a>
         <span>›</span>
         <a href="{% url 'candidatures:list' %}" class="hover:text-[#E8B800] transition-colors">Candidatures</a>
         <span>›</span>
@@ -93,28 +92,6 @@
         </div>
         {% endif %}
 
-        <!-- Entretiens liés -->
-        {% if candidature.entretiens.all %}
-        <div class="flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-                <div class="border-l-4 border-[#E8B800] pl-4"><h2 class="text-base font-semibold">Entretiens</h2></div>
-                <a href="{% url 'entretiens:create' %}?candidature={{ candidature.pk }}" class="text-sm font-semibold text-[#E8B800]">+ Planifier</a>
-            </div>
-            <div class="border border-[#E8E8E8] rounded divide-y divide-[#E8E8E8]">
-                {% for e in candidature.entretiens.all %}
-                <a href="{% url 'entretiens:detail' e.pk %}" class="flex items-center justify-between px-5 py-4 hover:bg-[#FAFAFA] transition-colors block">
-                    <div>
-                        <span class="text-sm font-semibold">{{ e.get_type_entretien_display }}</span>
-                        <span class="text-xs text-gray-500 ml-2">{{ e.date_heure|date:"d M Y à H\hi" }}</span>
-                    </div>
-                    <span class="text-xs font-semibold {% if e.statut == 'planifie' %}text-blue-600{% elif e.statut == 'passe' %}text-green-600{% else %}text-gray-400{% endif %}">
-                        {{ e.get_statut_display }}
-                    </span>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
 
     </div>
 
@@ -170,11 +147,6 @@
                 Voir l'offre
             </a>
             {% endif %}
-            <a href="{% url 'entretiens:create' %}"
-               class="flex items-center justify-center gap-2 border-2 border-[#1A1A1A] text-[#1A1A1A] px-4 py-2.5 rounded font-semibold text-sm hover:bg-[#1A1A1A] hover:text-white transition-colors">
-                <iconify-icon icon="solar:calendar-add-linear" class="text-base"></iconify-icon>
-                Planifier un entretien
-            </a>
             <a href="{% url 'candidatures:delete' candidature.pk %}"
                class="flex items-center justify-center gap-2 text-red-500 text-sm font-medium hover:underline mt-1">
                 <iconify-icon icon="solar:trash-bin-trash-linear" class="text-base"></iconify-icon>

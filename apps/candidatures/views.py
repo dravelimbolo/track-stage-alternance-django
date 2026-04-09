@@ -1,15 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .models import Candidature
 from .forms import CandidatureForm
+from .models import Candidature
 
 
 class CandidatureMixin(LoginRequiredMixin):
     """Mixin commun : filtre automatiquement par utilisateur connecté."""
+
     def get_queryset(self):
         return Candidature.objects.filter(user=self.request.user)
 
@@ -43,7 +43,9 @@ class CandidatureListView(CandidatureMixin, ListView):
         # Compteurs par statut
         base = Candidature.objects.filter(user=self.request.user)
         ctx["total"] = base.count()
-        ctx["en_cours"] = base.filter(statut__in=["envoyee", "en_attente", "relancee", "entretien"]).count()
+        ctx["en_cours"] = base.filter(
+            statut__in=["envoyee", "en_attente", "relancee", "entretien"]
+        ).count()
         return ctx
 
 
@@ -85,7 +87,7 @@ class CandidatureUpdateView(CandidatureMixin, UpdateView):
         ctx["title"] = f"Modifier — {self.object}"
         ctx["breadcrumb"] = [
             ("Candidatures", "candidatures:list"),
-            (str(self.object), f"candidatures:detail"),
+            (str(self.object), "candidatures:detail"),
             ("Modifier", None),
         ]
         return ctx

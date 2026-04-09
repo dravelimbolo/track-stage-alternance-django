@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import Candidature
 
 INPUT = (
@@ -23,23 +24,39 @@ class CandidatureForm(forms.ModelForm):
         model = Candidature
         exclude = ["user", "created_at", "updated_at"]
         widgets = {
-            "entreprise": forms.TextInput(attrs={"class": INPUT, "placeholder": "ex : TechNova SAS"}),
+            "entreprise": forms.TextInput(
+                attrs={"class": INPUT, "placeholder": "ex : TechNova SAS"}
+            ),
             "secteur": forms.Select(attrs={"class": SELECT}),
-            "site_web": forms.URLInput(attrs={"class": INPUT, "placeholder": "https://entreprise.com"}),
+            "site_web": forms.URLInput(
+                attrs={"class": INPUT, "placeholder": "https://entreprise.com"}
+            ),
             "lieu": forms.TextInput(attrs={"class": INPUT, "placeholder": "ex : Paris, Lyon…"}),
             "teletravail": forms.Select(attrs={"class": SELECT}),
-            "poste": forms.TextInput(attrs={"class": INPUT, "placeholder": "ex : Développeur Fullstack"}),
+            "poste": forms.TextInput(
+                attrs={"class": INPUT, "placeholder": "ex : Développeur Fullstack"}
+            ),
             "type_contrat": forms.Select(attrs={"class": SELECT}),
             "duree_contrat": forms.TextInput(attrs={"class": INPUT, "placeholder": "ex : 6 mois"}),
             "date_debut": forms.DateInput(attrs={"class": INPUT, "type": "date"}),
-            "remuneration": forms.TextInput(attrs={"class": INPUT, "placeholder": "ex : 800 €/mois"}),
+            "remuneration": forms.TextInput(
+                attrs={"class": INPUT, "placeholder": "ex : 800 €/mois"}
+            ),
             "lien_offre": forms.URLInput(attrs={"class": INPUT, "placeholder": "https://…"}),
             "statut": forms.Select(attrs={"class": SELECT}),
             "date_candidature": forms.DateInput(attrs={"class": INPUT, "type": "date"}),
             "date_relance": forms.DateInput(attrs={"class": INPUT, "type": "date"}),
             "contact_nom": forms.TextInput(attrs={"class": INPUT, "placeholder": "Prénom Nom"}),
-            "contact_email": forms.EmailInput(attrs={"class": INPUT, "placeholder": "recruteur@entreprise.com"}),
-            "contact_linkedin": forms.URLInput(attrs={"class": INPUT, "placeholder": "https://linkedin.com/in/…"}),
-            "notes": forms.Textarea(attrs={"class": TEXTAREA, "rows": 4, "placeholder": "Notes libres…"}),
-            "lettre_motivation": forms.Textarea(attrs={"class": TEXTAREA, "rows": 8, "placeholder": "Votre lettre de motivation…"}),
+            "contact_email": forms.EmailInput(
+                attrs={"class": INPUT, "placeholder": "recruteur@entreprise.com"}
+            ),
+            "contact_linkedin": forms.URLInput(
+                attrs={"class": INPUT, "placeholder": "https://linkedin.com/in/…"}
+            ),
+            "notes": forms.Textarea(
+                attrs={"class": TEXTAREA, "rows": 4, "placeholder": "Notes libres…"}
+            ),
+            "lettre_motivation": forms.Textarea(
+                attrs={"class": TEXTAREA, "rows": 8, "placeholder": "Votre lettre de motivation…"}
+            ),
         }

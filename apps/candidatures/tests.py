@@ -1,6 +1,6 @@
 import pytest
-from django.urls import reverse
 from django.test import Client
+from django.urls import reverse
 
 from apps.accounts.models import User
 from apps.candidatures.models import Candidature
@@ -88,7 +88,7 @@ class TestCandidatureViews:
         assert response.status_code == 200
 
     def test_detail_other_user(self, candidature, db):
-        other = User.objects.create_user(
+        User.objects.create_user(
             username="other@example.com",
             email="other@example.com",
             password="pass",

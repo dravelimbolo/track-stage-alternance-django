@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.urls import reverse
 
 
@@ -46,18 +46,24 @@ class Candidature(models.Model):
     secteur = models.CharField("secteur", max_length=20, choices=Secteur.choices, blank=True)
     site_web = models.URLField("site web", blank=True)
     lieu = models.CharField("lieu / ville", max_length=200, blank=True)
-    teletravail = models.CharField("télétravail", max_length=20, choices=Teletravail.choices, blank=True)
+    teletravail = models.CharField(
+        "télétravail", max_length=20, choices=Teletravail.choices, blank=True
+    )
 
     # Poste
     poste = models.CharField("intitulé du poste", max_length=200)
-    type_contrat = models.CharField("type de contrat", max_length=20, choices=TypeContrat.choices, default=TypeContrat.STAGE)
+    type_contrat = models.CharField(
+        "type de contrat", max_length=20, choices=TypeContrat.choices, default=TypeContrat.STAGE
+    )
     duree_contrat = models.CharField("durée", max_length=100, blank=True)
     date_debut = models.DateField("date de début souhaitée", null=True, blank=True)
     remuneration = models.CharField("rémunération", max_length=100, blank=True)
     lien_offre = models.URLField("lien de l'offre", blank=True)
 
     # Suivi
-    statut = models.CharField("statut", max_length=20, choices=Statut.choices, default=Statut.BROUILLON)
+    statut = models.CharField(
+        "statut", max_length=20, choices=Statut.choices, default=Statut.BROUILLON
+    )
     date_candidature = models.DateField("date de candidature", null=True, blank=True)
     date_relance = models.DateField("date de relance prévue", null=True, blank=True)
 
@@ -85,7 +91,7 @@ class Candidature(models.Model):
     def get_absolute_url(self):
         return reverse("candidatures:detail", kwargs={"pk": self.pk})
 
-    # Utilitaires de couleur pour les badges 
+    # Utilitaires de couleur pour les badges
     STATUT_COLORS = {
         "brouillon": ("bg-gray-100", "text-gray-700"),
         "envoyee": ("bg-blue-100", "text-blue-700"),
