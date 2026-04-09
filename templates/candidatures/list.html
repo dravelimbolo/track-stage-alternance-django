@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}TrackStage - Mes candidatures{% endblock %}
+
+{% block content %}
+<header class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 md:px-10 md:py-8 border-b border-[#E8E8E8] gap-4">
+    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Mes candidatures</h1>
+    <a href="{% url 'candidatures:create' %}"
+       class="bg-[#E8B800] text-[#1A1A1A] px-5 py-2.5 rounded font-semibold text-sm flex items-center gap-2 hover:bg-[#D1A600] transition-colors">
+        <iconify-icon icon="solar:add-circle-linear" class="text-lg"></iconify-icon>
+        Nouvelle candidature
+    </a>
+</header>
+
+<!-- Filters -->
+<div class="px-6 md:px-10 py-4 border-b border-[#E8E8E8] bg-[#FAFAFA] flex flex-wrap gap-3 items-center">
+    <form method="get" class="flex flex-wrap gap-3 items-center w-full">
+        <div class="relative flex-1 min-w-[200px]">
+            <iconify-icon icon="solar:magnifer-linear" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
+            <input type="text" name="q" value="{{ q }}" placeholder="Rechercher une entreprise ou un poste…"
+                   class="w-full h-10 pl-10 pr-4 rounded border-2 border-[#E0E0E0] bg-white text-sm focus:outline-none focus:border-[#E8B800] transition-colors">
+        </div>
+        <select name="statut" class="h-10 px-3 rounded border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] transition-colors appearance-none pr-8">
+            <option value="">Tous les statuts</option>
+            {% for value, label in statuts %}
+            <option value="{{ value }}" {% if value == current_statut %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <select name="type" class="h-10 px-3 rounded border-2 border-[#E0E0E0] bg-white text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#E8B800] transition-colors appearance-none pr-8">
+            <option value="">Tous les types</option>
+            {% for value, label in types %}
+            <option value="{{ value }}" {% if value == current_type %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="h-10 px-4 rounded bg-[#1A1A1A] text-white text-sm font-semibold hover:bg-[#E8B800] hover:text-[#1A1A1A] transition-colors">
+            Filtrer
+        </button>
+        {% if q or current_statut or current_type %}
+        <a href="{% url 'candidatures:list' %}" class="h-10 px-4 rounded border-2 border-[#E8E8E8] text-sm font-medium text-gray-500 hover:border-[#E8B800] transition-colors flex items-center">
+            Réinitialiser
+        </a>
+        {% endif %}
+    </form>
+    <div class="text-xs font-medium text-gray-400 w-full">{{ total }} candidature{{ total|pluralize }} au total • {{ en_cours }} en cours</div>
+</div>
+
+<!-- Table -->
+<div class="p-6 md:p-10">
+    {% if candidatures %}
+    <div class="border border-[#E8E8E8] rounded bg-white overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+                <tr class="border-b border-[#E8E8E8] text-xs uppercase tracking-tight text-[#1A1A1A]/50 font-semibold bg-[#FAFAFA]">
+                    <th class="px-5 py-4">Entreprise</th>
+                    <th class="px-5 py-4">Poste</th>
+                    <th class="px-5 py-4">Type</th>
+                    <th class="px-5 py-4">Statut</th>
+                    <th class="px-5 py-4">Date candidature</th>
+                    <th class="px-5 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in candidatures %}
+                <tr class="border-b border-[#E8E8E8] hover:bg-[#FAFAFA] transition-colors {% if forloop.counter|divisibleby:2 %}bg-[#FFF8D6]/30{% else %}bg-white{% endif %}">
+                    <td class="px-5 py-4 text-sm font-semibold">
+                        <a href="{% url 'candidatures:detail' c.pk %}" class="hover:text-[#E8B800] transition-colors">{{ c.entreprise }}</a>
+                    </td>
+                    <td class="px-5 py-4 text-sm font-medium text-[#1A1A1A]/80">{{ c.poste }}</td>
+                    <td class="px-5 py-4 text-sm text-[#1A1A1A]/60">{{ c.get_type_contrat_display }}</td>
+                    <td class="px-5 py-4">
+                        <span class="inline-flex px-2.5 py-1 rounded {{ c.statut_bg }} {{ c.statut_text }} text-xs font-semibold">
+                            {{ c.get_statut_display }}
+                        </span>
+                    </td>
+                    <td class="px-5 py-4 text-sm text-[#1A1A1A]/60">
+                        {% if c.date_candidature %}{{ c.date_candidature|date:"d M Y" }}{% else %}-{% endif %}
+                    </td>
+                    <td class="px-5 py-4 text-right flex items-center justify-end gap-3">
+                        <a href="{% url 'candidatures:detail' c.pk %}" class="text-[#1A1A1A]/40 hover:text-[#E8B800] transition-colors" title="Voir">
+                            <iconify-icon icon="solar:eye-linear" class="text-lg"></iconify-icon>
+                        </a>
+                        <a href="{% url 'candidatures:update' c.pk %}" class="text-[#1A1A1A]/40 hover:text-[#E8B800] transition-colors" title="Modifier">
+                            <iconify-icon icon="solar:pen-linear" class="text-lg"></iconify-icon>
+                        </a>
+                        <a href="{% url 'candidatures:delete' c.pk %}" class="text-[#1A1A1A]/40 hover:text-red-500 transition-colors" title="Supprimer">
+                            <iconify-icon icon="solar:trash-bin-trash-linear" class="text-lg"></iconify-icon>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="flex items-center justify-center gap-2 mt-8">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 border-2 border-[#E8E8E8] rounded text-sm font-medium hover:border-[#E8B800] transition-colors">Précédent</a>
+        {% endif %}
+        <span class="px-4 py-2 text-sm font-medium text-gray-500">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 border-2 border-[#E8E8E8] rounded text-sm font-medium hover:border-[#E8B800] transition-colors">Suivant</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="flex flex-col items-center justify-center py-24 gap-4">
+        <iconify-icon icon="solar:documents-minimalistic-linear" class="text-6xl text-gray-200"></iconify-icon>
+        <p class="text-base font-medium text-gray-400">Aucune candidature{% if q or current_statut %} correspondant aux filtres{% endif %}</p>
+        <a href="{% url 'candidatures:create' %}" class="bg-[#E8B800] text-[#1A1A1A] px-5 py-2.5 rounded font-semibold text-sm hover:bg-[#D1A600] transition-colors">
+            Ajouter une candidature
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

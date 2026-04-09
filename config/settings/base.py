@@ -24,7 +24,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.accounts",
-    # "apps.candidatures",
+    "apps.candidatures",
     # "apps.entretiens",
     # "apps.dashboard",
 ]

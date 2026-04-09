@@ -9,6 +9,7 @@ urlpatterns = [
     path("auth/", include("allauth.urls")),
     # Apps locales
     path("", include("apps.accounts.urls", namespace="accounts")),
+    path("candidatures/", include("apps.candidatures.urls", namespace="candidatures")),
 ]
 
 if settings.DEBUG:
