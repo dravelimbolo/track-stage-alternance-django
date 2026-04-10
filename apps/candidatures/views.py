@@ -84,7 +84,7 @@ class CandidatureUpdateView(CandidatureMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["title"] = f"Modifier — {self.object}"
+        ctx["title"] = f"Modifier - {self.object}"
         ctx["breadcrumb"] = [
             ("Candidatures", "candidatures:list"),
             (str(self.object), "candidatures:detail"),

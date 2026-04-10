@@ -81,8 +81,8 @@ class TestEntretienModel:
             statut=Entretien.Statut.PLANIFIE,
             date_heure=timezone.now() + timezone.timedelta(days=1),
         )
-        assert e.entreprise == "—"
-        assert e.poste == "—"
+        assert e.entreprise == "-"
+        assert e.poste == "-"
 
     def test_ordering_par_date(self, user, candidature, db):
         Entretien.objects.create(
