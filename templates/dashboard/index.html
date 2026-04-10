@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}TrackStage - Tableau de bord{% endblock %}
+
+{% block content %}
+<header class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 md:px-10 md:py-8 border-b border-[#E8E8E8] gap-4">
+    <div>
+        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Tableau de bord</h1>
+        <p class="text-sm text-gray-500 mt-1">Bonjour, {{ user.nom_affiche }} 👋</p>
+    </div>
+    <a href="{% url 'candidatures:create' %}"
+       class="bg-[#E8B800] text-[#1A1A1A] px-5 py-2.5 rounded font-semibold text-sm flex items-center gap-2 hover:bg-[#D1A600] transition-colors">
+        <iconify-icon icon="solar:add-circle-linear" class="text-lg"></iconify-icon>
+        Nouvelle candidature
+    </a>
+</header>
+
+<div class="p-6 md:p-10 flex flex-col gap-10">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white border border-[#E8E8E8] border-l-4 border-l-[#E8B800] rounded-r p-5 flex flex-col gap-2">
+            <span class="text-sm font-medium text-[#1A1A1A]/60">Total candidatures</span>
+            <span class="text-4xl font-semibold tracking-tight text-[#E8B800]">{{ total_candidatures }}</span>
+        </div>
+        <div class="bg-white border border-[#E8E8E8] border-l-4 border-l-[#E8B800] rounded-r p-5 flex flex-col gap-2">
+            <span class="text-sm font-medium text-[#1A1A1A]/60">En cours</span>
+            <span class="text-4xl font-semibold tracking-tight text-[#1A1A1A]">{{ en_cours }}</span>
+        </div>
+        <div class="bg-white border border-[#E8E8E8] border-l-4 border-l-[#E8B800] rounded-r p-5 flex flex-col gap-2">
+            <span class="text-sm font-medium text-[#1A1A1A]/60">Entretiens planifiés</span>
+            <span class="text-4xl font-semibold tracking-tight text-[#1A1A1A]">{{ entretiens_planifies|stringformat:"02d" }}</span>
+        </div>
+        <div class="bg-white border border-[#E8E8E8] border-l-4 border-l-[#E8B800] rounded-r p-5 flex flex-col gap-2">
+            <span class="text-sm font-medium text-[#1A1A1A]/60">Offres reçues</span>
+            <span class="text-4xl font-semibold tracking-tight text-[#1A1A1A]">{{ offres_recues|stringformat:"02d" }}</span>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-10 items-start">
+
+        <!-- Recent candidatures table -->
+        <div class="xl:col-span-2 flex flex-col gap-5">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold tracking-tight">Candidatures récentes</h2>
+                <a href="{% url 'candidatures:list' %}" class="text-sm font-medium text-[#1A1A1A]/60 hover:text-[#E8B800] transition-colors">Tout voir</a>
+            </div>
+            <div class="border border-[#E8E8E8] rounded bg-white overflow-x-auto">
+                {% if recent_candidatures %}
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="border-b border-[#E8E8E8] text-xs uppercase tracking-tight text-[#1A1A1A]/50 font-semibold bg-[#FAFAFA]">
+                            <th class="px-5 py-4">Entreprise</th>
+                            <th class="px-5 py-4">Poste</th>
+                            <th class="px-5 py-4">Type</th>
+                            <th class="px-5 py-4">Statut</th>
+                            <th class="px-5 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in recent_candidatures %}
+                        <tr class="border-b border-[#E8E8E8] hover:bg-[#FAFAFA] transition-colors {% if forloop.counter|divisibleby:2 %}bg-[#FFF8D6]/40{% else %}bg-white{% endif %}">
+                            <td class="px-5 py-4 text-sm font-semibold">{{ c.entreprise }}</td>
+                            <td class="px-5 py-4 text-sm font-medium text-[#1A1A1A]/80">{{ c.poste }}</td>
+                            <td class="px-5 py-4 text-sm text-[#1A1A1A]/60">{{ c.get_type_contrat_display }}</td>
+                            <td class="px-5 py-4">
+                                <span class="inline-flex px-2.5 py-1 rounded {{ c.statut_bg }} {{ c.statut_text }} text-xs font-semibold tracking-tight">
+                                    {{ c.get_statut_display }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-4 text-right">
+                                <a href="{% url 'candidatures:update' c.pk %}" class="text-[#1A1A1A]/40 hover:text-[#E8B800] transition-colors">
+                                    <iconify-icon icon="solar:pen-linear" class="text-lg"></iconify-icon>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-16 gap-3 text-center">
+                    <iconify-icon icon="solar:documents-minimalistic-linear" class="text-5xl text-gray-200"></iconify-icon>
+                    <p class="text-sm font-medium text-gray-400">Aucune candidature pour le moment</p>
+                    <a href="{% url 'candidatures:create' %}" class="text-sm font-semibold text-[#E8B800] hover:underline">
+                        Ajouter ma première candidature →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Prochains entretiens -->
+        <div class="flex flex-col gap-5">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold tracking-tight">Prochains entretiens</h2>
+                <a href="{% url 'entretiens:list' %}" class="text-sm font-medium text-[#1A1A1A]/60 hover:text-[#E8B800] transition-colors">Tout voir</a>
+            </div>
+            <div class="border border-[#E8E8E8] rounded bg-white overflow-hidden">
+                {% if prochains_entretiens %}
+                <div class="divide-y divide-[#E8E8E8]">
+                    {% for e in prochains_entretiens %}
+                    <a href="{% url 'entretiens:detail' e.pk %}" class="flex items-start gap-4 p-5 hover:bg-[#FAFAFA] transition-colors block">
+                        <div class="w-11 h-11 rounded bg-[#E8B800] flex flex-col items-center justify-center shrink-0">
+                            <span class="text-xs font-semibold text-[#1A1A1A] leading-tight">{{ e.date_heure|date:"d" }}</span>
+                            <span class="text-xs font-medium text-[#1A1A1A]/70 uppercase leading-tight">{{ e.date_heure|date:"M" }}</span>
+                        </div>
+                        <div class="flex flex-col overflow-hidden">
+                            <span class="text-sm font-semibold text-[#1A1A1A] truncate">{{ e.entreprise }}</span>
+                            <span class="text-xs text-[#1A1A1A]/60 truncate">{{ e.get_type_entretien_display }}</span>
+                            <span class="text-xs text-[#1A1A1A]/40 mt-0.5">{{ e.date_heure|date:"H\hi" }}</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="flex flex-col items-center justify-center py-10 gap-3 text-center">
+                    <iconify-icon icon="solar:calendar-mark-linear" class="text-4xl text-gray-200"></iconify-icon>
+                    <p class="text-xs font-medium text-gray-400">Aucun entretien planifié</p>
+                    <a href="{% url 'entretiens:create' %}" class="text-xs font-semibold text-[#E8B800] hover:underline">Planifier →</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

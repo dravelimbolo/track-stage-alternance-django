@@ -11,6 +11,7 @@ urlpatterns = [
     path("", include("apps.accounts.urls", namespace="accounts")),
     path("candidatures/", include("apps.candidatures.urls", namespace="candidatures")),
     path("entretiens/", include("apps.entretiens.urls", namespace="entretiens")),
+    path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
 ]
 
 if settings.DEBUG:
