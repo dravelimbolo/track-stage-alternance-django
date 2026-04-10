@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}TrackStage - {{ title }}{% endblock %}
+
+{% block content %}
+<header class="p-6 md:px-10 md:py-8 border-b border-[#E8E8E8]">
+    <div class="flex items-center gap-2 text-xs font-medium text-[#1A1A1A]/50 mb-1">
+        <a href="{% url 'entretiens:list' %}" class="hover:text-[#E8B800] transition-colors">Entretiens</a>
+        <span>›</span>
+        <span class="text-[#1A1A1A]">{{ title }}</span>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">{{ title }}</h1>
+</header>
+
+<div class="p-6 md:p-10 pb-32">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Section 1 : Général -->
+        <div class="flex flex-col gap-5 mb-10">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Informations générales</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5 sm:col-span-2">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Candidature associée</label>
+                    {{ form.candidature }}
+                    <p class="text-xs text-gray-400">Sélectionnez la candidature liée à cet entretien (optionnel)</p>
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Type d'entretien *</label>
+                    {{ form.type_entretien }}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Statut</label>
+                    {{ form.statut }}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Date et heure *</label>
+                    {{ form.date_heure }}
+                    {% if form.date_heure.errors %}<p class="text-xs text-red-600">{{ form.date_heure.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Durée (minutes)</label>
+                    {{ form.duree_minutes }}
+                </div>
+                <div class="flex flex-col gap-1.5 sm:col-span-2">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Lieu ou lien visio</label>
+                    {{ form.lieu_ou_lien }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2 : Contact -->
+        <div class="flex flex-col gap-5 mb-10">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Interlocuteur</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Nom de l'interlocuteur</label>
+                    {{ form.contact_nom }}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Poste de l'interlocuteur</label>
+                    {{ form.contact_poste }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3 : Préparation -->
+        <div class="flex flex-col gap-5 mb-10">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Préparation</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-6 flex flex-col gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Notes de préparation</label>
+                    {{ form.preparation }}
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Questions à préparer / posées</label>
+                    {{ form.questions }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4 : Retour (visible seulement en modification) -->
+        {% if object %}
+        <div class="flex flex-col gap-5 mb-10">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Retour post-entretien</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-6">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-xs font-semibold text-[#1A1A1A]/70 uppercase tracking-wide">Ressenti & retour</label>
+                    {{ form.retour }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Section 5 : Rappels -->
+        <div class="flex flex-col gap-5 mb-10">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Rappels par e-mail</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-6 flex flex-col gap-4">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    {{ form.rappel_24h }}
+                    <span class="text-sm font-medium text-[#1A1A1A]">Rappel 24h avant l'entretien</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    {{ form.rappel_1h }}
+                    <span class="text-sm font-medium text-[#1A1A1A]">Rappel 1h avant l'entretien</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-4">
+            <button type="submit" class="bg-[#E8B800] text-[#1A1A1A] px-6 py-3 rounded font-semibold text-sm hover:bg-[#D1A600] transition-colors">
+                {% if object %}Enregistrer les modifications{% else %}Planifier l'entretien{% endif %}
+            </button>
+            <a href="{% url 'entretiens:list' %}" class="text-sm font-medium text-gray-500 hover:text-[#1A1A1A] transition-colors">
+                Annuler
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
