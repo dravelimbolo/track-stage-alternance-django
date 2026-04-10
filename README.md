@@ -1,6 +1,6 @@
 <div align="center">
 
-<!-- Titre animé — texte BLANC -->
+<!-- Titre animé - texte BLANC -->
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=900&size=40&duration=2800&pause=1200&color=FFFFFF&center=true&vCenter=true&width=600&height=90&lines=Je+vous+présente;Track+Stage+Alternance)](https://dravelimbolo.github.io/track-stage-alternance-django/)
 
 **`Projet Full Stack · Django · Tailwind CSS · PostgreSQL`**
