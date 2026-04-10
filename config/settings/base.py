@@ -24,7 +24,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.accounts",
-    # "apps.candidatures",
+    "apps.candidatures",
     # "apps.entretiens",
     # "apps.dashboard",
 ]
@@ -81,7 +81,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-LOGIN_REDIRECT_URL = "dashboard:index"
+LOGIN_REDIRECT_URL = "candidatures:list"
 LOGOUT_REDIRECT_URL = "accounts:login"
 LOGIN_URL = "accounts:login"
 
