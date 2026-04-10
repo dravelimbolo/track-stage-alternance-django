@@ -10,6 +10,7 @@ urlpatterns = [
     # Apps locales
     path("", include("apps.accounts.urls", namespace="accounts")),
     path("candidatures/", include("apps.candidatures.urls", namespace="candidatures")),
+    path("entretiens/", include("apps.entretiens.urls", namespace="entretiens")),
 ]
 
 if settings.DEBUG:
