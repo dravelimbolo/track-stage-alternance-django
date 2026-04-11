@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}TrackStage - {{ candidature }}{% endblock %}
+
+{% block content %}
+<header class="p-6 md:px-10 md:py-8 border-b border-[#E8E8E8]">
+    <div class="flex items-center gap-2 text-xs font-medium text-[#1A1A1A]/50 mb-1">
+        <a href="{% url 'dashboard:index' %}" class="hover:text-[#E8B800] transition-colors">Tableau de bord</a>
+        <span>›</span>
+        <a href="{% url 'candidatures:list' %}" class="hover:text-[#E8B800] transition-colors">Candidatures</a>
+        <span>›</span>
+        <span class="text-[#1A1A1A]">{{ candidature.entreprise }}</span>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-1">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">{{ candidature.poste }}</h1>
+            <p class="text-base font-medium text-gray-500 mt-1">{{ candidature.entreprise }}{% if candidature.lieu %} - {{ candidature.lieu }}{% endif %}</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="inline-flex px-3 py-1.5 rounded {{ candidature.statut_bg }} {{ candidature.statut_text }} text-sm font-semibold">
+                {{ candidature.get_statut_display }}
+            </span>
+            <a href="{% url 'candidatures:update' candidature.pk %}"
+               class="bg-[#E8B800] text-[#1A1A1A] px-4 py-2 rounded font-semibold text-sm hover:bg-[#D1A600] transition-colors flex items-center gap-2">
+                <iconify-icon icon="solar:pen-linear" class="text-base"></iconify-icon>
+                Modifier
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="p-6 md:p-10 grid grid-cols-1 xl:grid-cols-3 gap-10 items-start">
+
+    <!-- Main info -->
+    <div class="xl:col-span-2 flex flex-col gap-8">
+
+        <!-- Entreprise & Poste -->
+        <div class="flex flex-col gap-4">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Informations</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {% if candidature.type_contrat %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Type de contrat</div>
+                    <div class="text-sm font-semibold">{{ candidature.get_type_contrat_display }}</div>
+                </div>
+                {% endif %}
+                {% if candidature.duree_contrat %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Durée</div>
+                    <div class="text-sm font-semibold">{{ candidature.duree_contrat }}</div>
+                </div>
+                {% endif %}
+                {% if candidature.date_debut %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Début souhaité</div>
+                    <div class="text-sm font-semibold">{{ candidature.date_debut|date:"d M Y" }}</div>
+                </div>
+                {% endif %}
+                {% if candidature.remuneration %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Rémunération</div>
+                    <div class="text-sm font-semibold">{{ candidature.remuneration }}</div>
+                </div>
+                {% endif %}
+                {% if candidature.teletravail %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Télétravail</div>
+                    <div class="text-sm font-semibold">{{ candidature.get_teletravail_display }}</div>
+                </div>
+                {% endif %}
+                {% if candidature.secteur %}
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-4">
+                    <div class="text-xs font-semibold text-[#1A1A1A]/50 uppercase tracking-wide mb-1">Secteur</div>
+                    <div class="text-sm font-semibold">{{ candidature.get_secteur_display }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if candidature.notes %}
+        <div class="flex flex-col gap-3">
+            <div class="border-l-4 border-[#E8B800] pl-4"><h2 class="text-base font-semibold">Notes</h2></div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-5 text-sm leading-relaxed whitespace-pre-wrap">{{ candidature.notes }}</div>
+        </div>
+        {% endif %}
+
+        {% if candidature.lettre_motivation %}
+        <div class="flex flex-col gap-3">
+            <div class="border-l-4 border-[#E8B800] pl-4"><h2 class="text-base font-semibold">Lettre de motivation</h2></div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-5 text-sm leading-relaxed whitespace-pre-wrap">{{ candidature.lettre_motivation }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Entretiens liés -->
+        {% if candidature.entretiens.all %}
+        <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="border-l-4 border-[#E8B800] pl-4"><h2 class="text-base font-semibold">Entretiens</h2></div>
+                <a href="{% url 'entretiens:create' %}?candidature={{ candidature.pk }}" class="text-sm font-semibold text-[#E8B800]">+ Planifier</a>
+            </div>
+            <div class="border border-[#E8E8E8] rounded divide-y divide-[#E8E8E8]">
+                {% for e in candidature.entretiens.all %}
+                <a href="{% url 'entretiens:detail' e.pk %}" class="flex items-center justify-between px-5 py-4 hover:bg-[#FAFAFA] transition-colors block">
+                    <div>
+                        <span class="text-sm font-semibold">{{ e.get_type_entretien_display }}</span>
+                        <span class="text-xs text-gray-500 ml-2">{{ e.date_heure|date:"d M Y à H\hi" }}</span>
+                    </div>
+                    <span class="text-xs font-semibold {% if e.statut == 'planifie' %}text-blue-600{% elif e.statut == 'passe' %}text-green-600{% else %}text-gray-400{% endif %}">
+                        {{ e.get_statut_display }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="flex flex-col gap-5">
+        <!-- Suivi card -->
+        <div class="border border-[#E8E8E8] rounded p-5 flex flex-col gap-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-[#1A1A1A]/50">Suivi</h3>
+            {% if candidature.date_candidature %}
+            <div>
+                <div class="text-xs text-gray-400">Date de candidature</div>
+                <div class="text-sm font-semibold mt-0.5">{{ candidature.date_candidature|date:"d M Y" }}</div>
+            </div>
+            {% endif %}
+            {% if candidature.date_relance %}
+            <div>
+                <div class="text-xs text-gray-400">Relance prévue le</div>
+                <div class="text-sm font-semibold mt-0.5">{{ candidature.date_relance|date:"d M Y" }}</div>
+            </div>
+            {% endif %}
+            <div>
+                <div class="text-xs text-gray-400">Ajoutée le</div>
+                <div class="text-sm font-semibold mt-0.5">{{ candidature.created_at|date:"d M Y" }}</div>
+            </div>
+        </div>
+
+        <!-- Contact card -->
+        {% if candidature.contact_nom or candidature.contact_email %}
+        <div class="border border-[#E8E8E8] rounded p-5 flex flex-col gap-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-[#1A1A1A]/50">Contact recruteur</h3>
+            {% if candidature.contact_nom %}<div class="text-sm font-semibold">{{ candidature.contact_nom }}</div>{% endif %}
+            {% if candidature.contact_email %}
+            <a href="mailto:{{ candidature.contact_email }}" class="text-sm text-[#E8B800] hover:underline flex items-center gap-1">
+                <iconify-icon icon="solar:letter-linear" class="text-base"></iconify-icon>
+                {{ candidature.contact_email }}
+            </a>
+            {% endif %}
+            {% if candidature.contact_linkedin %}
+            <a href="{{ candidature.contact_linkedin }}" target="_blank" class="text-sm text-[#E8B800] hover:underline flex items-center gap-1">
+                <iconify-icon icon="mdi:linkedin" class="text-base"></iconify-icon>
+                Voir le profil LinkedIn
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="flex flex-col gap-2">
+            {% if candidature.lien_offre %}
+            <a href="{{ candidature.lien_offre }}" target="_blank"
+               class="flex items-center justify-center gap-2 border-2 border-[#E8B800] text-[#1A1A1A] px-4 py-2.5 rounded font-semibold text-sm hover:bg-[#E8B800] transition-colors">
+                <iconify-icon icon="solar:link-linear" class="text-base"></iconify-icon>
+                Voir l'offre
+            </a>
+            {% endif %}
+            <a href="{% url 'entretiens:create' %}"
+               class="flex items-center justify-center gap-2 border-2 border-[#1A1A1A] text-[#1A1A1A] px-4 py-2.5 rounded font-semibold text-sm hover:bg-[#1A1A1A] hover:text-white transition-colors">
+                <iconify-icon icon="solar:calendar-add-linear" class="text-base"></iconify-icon>
+                Planifier un entretien
+            </a>
+            <a href="{% url 'candidatures:delete' candidature.pk %}"
+               class="flex items-center justify-center gap-2 text-red-500 text-sm font-medium hover:underline mt-1">
+                <iconify-icon icon="solar:trash-bin-trash-linear" class="text-base"></iconify-icon>
+                Supprimer cette candidature
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -131,7 +131,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Messages framework tags
-from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as messages  # noqa: E402
 
 MESSAGE_TAGS = {
     messages.DEBUG: "debug",

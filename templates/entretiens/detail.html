@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}TrackStage - Entretien {{ entretien.entreprise }}{% endblock %}
+
+{% block content %}
+<header class="p-6 md:px-10 md:py-8 border-b border-[#E8E8E8]">
+    <div class="flex items-center gap-2 text-xs font-medium text-[#1A1A1A]/50 mb-1">
+        <a href="{% url 'dashboard:index' %}" class="hover:text-[#E8B800] transition-colors">Tableau de bord</a>
+        <span>›</span>
+        <a href="{% url 'entretiens:list' %}" class="hover:text-[#E8B800] transition-colors">Entretiens</a>
+        <span>›</span>
+        <span class="text-[#1A1A1A]">{{ entretien.entreprise }}</span>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-1">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">
+                {{ entretien.get_type_entretien_display }} - {{ entretien.entreprise }}
+            </h1>
+            <p class="text-base font-medium text-gray-500 mt-1">
+                {{ entretien.date_heure|date:"l d F Y à H\hi"|capfirst }}
+                <span class="text-gray-300 mx-1">·</span>
+                {{ entretien.duree_minutes }} min
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="inline-flex px-3 py-1.5 rounded
+                {% if entretien.statut == 'planifie' %}bg-blue-100 text-blue-700
+                {% elif entretien.statut == 'passe' %}bg-green-100 text-green-700
+                {% elif entretien.statut == 'annule' %}bg-red-100 text-red-700
+                {% else %}bg-gray-100 text-gray-600{% endif %}
+                text-sm font-semibold">
+                {{ entretien.get_statut_display }}
+            </span>
+            <a href="{% url 'entretiens:update' entretien.pk %}"
+               class="bg-[#E8B800] text-[#1A1A1A] px-4 py-2 rounded font-semibold text-sm hover:bg-[#D1A600] transition-colors flex items-center gap-2">
+                <iconify-icon icon="solar:pen-linear" class="text-base"></iconify-icon>
+                Modifier
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="p-6 md:p-10 grid grid-cols-1 xl:grid-cols-3 gap-10 items-start">
+
+    <!-- Main content -->
+    <div class="xl:col-span-2 flex flex-col gap-8">
+
+        {% if entretien.preparation %}
+        <div class="flex flex-col gap-3">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Notes de préparation</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-5 text-sm leading-relaxed whitespace-pre-wrap">{{ entretien.preparation }}</div>
+        </div>
+        {% endif %}
+
+        {% if entretien.questions %}
+        <div class="flex flex-col gap-3">
+            <div class="border-l-4 border-[#E8B800] pl-4">
+                <h2 class="text-base font-semibold">Questions</h2>
+            </div>
+            <div class="bg-[#FFF8D6] border border-[#E8E8E8] rounded p-5 text-sm leading-relaxed whitespace-pre-wrap">{{ entretien.questions }}</div>
+        </div>
+        {% endif %}
+
+        {% if entretien.retour %}
+        <div class="flex flex-col gap-3">
+            <div class="border-l-4 border-[#1A1A1A] pl-4">
+                <h2 class="text-base font-semibold">Retour post-entretien</h2>
+            </div>
+            <div class="bg-[#FAFAFA] border border-[#E8E8E8] rounded p-5 text-sm leading-relaxed whitespace-pre-wrap">{{ entretien.retour }}</div>
+        </div>
+        {% endif %}
+
+        {% if not entretien.preparation and not entretien.questions and not entretien.retour %}
+        <div class="border border-dashed border-[#E8E8E8] rounded p-8 flex flex-col items-center gap-3 text-center">
+            <iconify-icon icon="solar:notes-linear" class="text-4xl text-gray-200"></iconify-icon>
+            <p class="text-sm text-gray-400">Aucune note de préparation renseignée.</p>
+            <a href="{% url 'entretiens:update' entretien.pk %}" class="text-sm font-semibold text-[#E8B800] hover:underline">
+                Ajouter des notes →
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="flex flex-col gap-5">
+
+        <!-- Info card -->
+        <div class="border border-[#E8E8E8] rounded p-5 flex flex-col gap-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-[#1A1A1A]/50">Détails</h3>
+            <div>
+                <div class="text-xs text-gray-400">Date</div>
+                <div class="text-sm font-semibold mt-0.5">{{ entretien.date_heure|date:"d M Y à H\hi" }}</div>
+            </div>
+            <div>
+                <div class="text-xs text-gray-400">Durée</div>
+                <div class="text-sm font-semibold mt-0.5">{{ entretien.duree_minutes }} minutes</div>
+            </div>
+            {% if entretien.lieu_ou_lien %}
+            <div>
+                <div class="text-xs text-gray-400">Lieu / Lien</div>
+                <div class="text-sm font-semibold mt-0.5 break-all">{{ entretien.lieu_ou_lien }}</div>
+            </div>
+            {% endif %}
+            {% if entretien.contact_nom %}
+            <div>
+                <div class="text-xs text-gray-400">Interlocuteur</div>
+                <div class="text-sm font-semibold mt-0.5">{{ entretien.contact_nom }}</div>
+                {% if entretien.contact_poste %}
+                <div class="text-xs text-gray-500">{{ entretien.contact_poste }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if entretien.rappel_24h or entretien.rappel_1h %}
+            <div>
+                <div class="text-xs text-gray-400 mb-1">Rappels actifs</div>
+                {% if entretien.rappel_24h %}
+                <span class="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded mr-1 font-medium">
+                    <iconify-icon icon="solar:bell-linear" class="text-xs"></iconify-icon> 24h
+                </span>
+                {% endif %}
+                {% if entretien.rappel_1h %}
+                <span class="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-medium">
+                    <iconify-icon icon="solar:bell-linear" class="text-xs"></iconify-icon> 1h
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Candidature liée -->
+        {% if entretien.candidature %}
+        <div class="border border-[#E8E8E8] rounded p-5 flex flex-col gap-3">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-[#1A1A1A]/50">Candidature liée</h3>
+            <a href="{% url 'candidatures:detail' entretien.candidature.pk %}"
+               class="flex flex-col gap-1 hover:text-[#E8B800] transition-colors">
+                <span class="text-sm font-semibold">{{ entretien.candidature.entreprise }}</span>
+                <span class="text-xs text-gray-500">{{ entretien.candidature.poste }}</span>
+                <span class="text-xs text-[#E8B800] mt-1">Voir la candidature →</span>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="flex flex-col gap-2">
+            <a href="{% url 'entretiens:update' entretien.pk %}"
+               class="flex items-center justify-center gap-2 border-2 border-[#E8B800] text-[#1A1A1A] px-4 py-2.5 rounded font-semibold text-sm hover:bg-[#E8B800] transition-colors">
+                <iconify-icon icon="solar:pen-linear" class="text-base"></iconify-icon>
+                Modifier l'entretien
+            </a>
+            <a href="{% url 'entretiens:delete' entretien.pk %}"
+               class="flex items-center justify-center gap-2 text-red-500 text-sm font-medium hover:underline mt-1">
+                <iconify-icon icon="solar:trash-bin-trash-linear" class="text-base"></iconify-icon>
+                Supprimer
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

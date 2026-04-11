@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}TrackStage - Supprimer une candidature{% endblock %}
+{% block content %}
+<div class="p-6 md:p-10 flex items-center justify-center min-h-[60vh]">
+    <div class="max-w-md w-full border-2 border-red-200 rounded-xl p-8 bg-white flex flex-col gap-6 text-center">
+        <iconify-icon icon="solar:trash-bin-trash-linear" class="text-5xl text-red-400 mx-auto"></iconify-icon>
+        <div>
+            <h1 class="text-xl font-semibold text-[#1A1A1A]">Supprimer cette candidature ?</h1>
+            <p class="text-sm text-gray-500 mt-2">
+                Vous êtes sur le point de supprimer <strong>{{ candidature.poste }}</strong> chez <strong>{{ candidature.entreprise }}</strong>.<br>
+                Cette action est irréversible.
+            </p>
+        </div>
+        <div class="flex gap-3 justify-center">
+            <a href="{% url 'candidatures:list' %}" class="px-5 py-2.5 border-2 border-[#E8E8E8] rounded font-semibold text-sm hover:border-[#E8B800] transition-colors">
+                Annuler
+            </a>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="px-5 py-2.5 bg-red-500 text-white rounded font-semibold text-sm hover:bg-red-600 transition-colors">
+                    Supprimer définitivement
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
