@@ -64,15 +64,15 @@ class Entretien(models.Model):
 
     def __str__(self):
         cand = str(self.candidature) if self.candidature else "sans candidature"
-        return f"{self.get_type_entretien_display()} — {cand} ({self.date_heure:%d/%m/%Y %H:%M})"
+        return f"{self.get_type_entretien_display()} - {cand} ({self.date_heure:%d/%m/%Y %H:%M})"
 
     def get_absolute_url(self):
         return reverse("entretiens:detail", kwargs={"pk": self.pk})
 
     @property
     def entreprise(self):
-        return self.candidature.entreprise if self.candidature else "—"
+        return self.candidature.entreprise if self.candidature else "-"
 
     @property
     def poste(self):
-        return self.candidature.poste if self.candidature else "—"
+        return self.candidature.poste if self.candidature else "-"
